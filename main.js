@@ -1,0 +1,1 @@
+(()=>{"use strict";const e=document.querySelector("#entry"),t=document.createElement("p");t.innerText="Hello Test!",e.appendChild(t)})();
