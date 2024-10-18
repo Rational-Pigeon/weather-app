@@ -13,6 +13,8 @@ export function processWeatherData(response) {
         icon: response.currentConditions.icon,
         humidity: response.currentConditions.humidity,
         windspeed: response.currentConditions.windspeed,
+        sunset: response.currentConditions.sunset,
+        sunrise: response.currentConditions.sunrise,
         tempmin: response.days[0].tempmin,
         tempmax: response.days[0].tempmax,
     };
@@ -27,6 +29,8 @@ export function processWeatherData(response) {
         feelslike: hour.feelslike,
         datetime: hour.datetime,
         icon: hour.icon,
+        humidity: hour.humidity,
+        windspeed: hour.windspeed,
     }));
 
     // Forecast for the next 7 days (starting from tomorrow)
@@ -36,6 +40,7 @@ export function processWeatherData(response) {
         tempmax: day.tempmax,
         icon: day.icon,
         humidity: day.humidity,
+        windspeed: day.windspeed,
     }));
 
     return {
