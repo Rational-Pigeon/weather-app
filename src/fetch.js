@@ -5,7 +5,7 @@ export async function getUserLocation() {
         });
 
         const { latitude, longitude } = position.coords;
-        return { latitude, longitude };
+        return latitude + "," + longitude;
     } catch (error) {
         console.error('Failed to get user location:', error);
         return { error: error.message };

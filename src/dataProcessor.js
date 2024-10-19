@@ -7,7 +7,7 @@ function getDayName(dateString) {
     return date.toLocaleDateString('en-US', { weekday: 'long' });
 }
 
-export async function getCityName(resolvedAddress) {
+async function getCityName(resolvedAddress) {
     if (isNaN(resolvedAddress.at(0))) {
         return resolvedAddress.split(",")[0].trim();
     }
@@ -35,7 +35,7 @@ export async function getCityName(resolvedAddress) {
     }
 }
 
-export async function processWeatherData(response) {
+async function processWeatherData(response) {
     const city = await getCityName(response.resolvedAddress);
     console.log(city);
 
@@ -84,8 +84,7 @@ export async function processWeatherData(response) {
     };
 }
 
-export async function defaultWeatherData() {
-    let { latitude, longitude } = await getUserLocation();
-    let location = latitude + "," + longitude;
+export async function getFormattedData(location) {
+    location = location ? location : await getUserLocation();
     return processWeatherData(await getWeatherData(urlComposer(location)));
-}
+};
