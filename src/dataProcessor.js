@@ -1,3 +1,6 @@
+import { getUserLocation, getWeatherData } from "./fetch";
+import urlComposer from "./url-composer";
+
 // Helper function to convert date string to day name
 function getDayName(dateString) {
     const date = new Date(dateString);
@@ -79,4 +82,10 @@ export async function processWeatherData(response) {
         hourlyConditions,
         weeklyForecast,
     };
+}
+
+export async function defaultWeatherData() {
+    let { latitude, longitude } = await getUserLocation();
+    let location = latitude + "," + longitude;
+    return processWeatherData(await getWeatherData(urlComposer(location)));
 }
