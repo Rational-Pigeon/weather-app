@@ -11,6 +11,8 @@ async function processWeatherData(response) {
     const city = await getCityName(response.resolvedAddress);
     console.log(city);
 
+    let unitSystem = "imperial";
+
     const currentWeather = {
         conditions: response.currentConditions.conditions,
         datetime: response.currentConditions.datetime,
@@ -49,6 +51,7 @@ async function processWeatherData(response) {
     }));
 
     return {
+        unitSystem,
         city,
         currentWeather,
         hourlyConditions,
@@ -60,3 +63,78 @@ export async function getFormattedData(location) {
     location = location ? location : await getUserLocation();
     return processWeatherData(await getWeatherData(urlComposer(location)));
 };
+
+export async function flipUnits(weatherData) {
+
+    switch (weatherData.unitSystem) {
+        case "imperial":
+            // Convert current weather
+            weatherData.currentWeather.feelslike = fahrenheitToCelsius(weatherData.currentWeather.feelslike);
+            weatherData.currentWeather.tempmin = fahrenheitToCelsius(weatherData.currentWeather.tempmin);
+            weatherData.currentWeather.tempmax = fahrenheitToCelsius(weatherData.currentWeather.tempmax);
+            weatherData.currentWeather.windspeed = mphToKmh(weatherData.currentWeather.windspeed);
+
+            // Convert hourly conditions
+            weatherData.hourlyConditions.forEach(hour => {
+                hour.feelslike = fahrenheitToCelsius(hour.feelslike);
+                hour.windspeed = mphToKmh(hour.windspeed);
+            });
+
+            // Convert weekly forecast
+            weatherData.weeklyForecast.forEach(day => {
+                day.tempmin = fahrenheitToCelsius(day.tempmin);
+                day.tempmax = fahrenheitToCelsius(day.tempmax);
+                day.windspeed = mphToKmh(day.windspeed);
+            });
+
+            // Switch to metric
+            weatherData.unitSystem = "metric";
+            break;
+
+        case "metric":
+            // Convert current weather
+            weatherData.currentWeather.feelslike = celsiusToFahrenheit(weatherData.currentWeather.feelslike);
+            weatherData.currentWeather.tempmin = celsiusToFahrenheit(weatherData.currentWeather.tempmin);
+            weatherData.currentWeather.tempmax = celsiusToFahrenheit(weatherData.currentWeather.tempmax);
+            weatherData.currentWeather.windspeed = kmhToMph(weatherData.currentWeather.windspeed);
+
+            // Convert hourly conditions
+            weatherData.hourlyConditions.forEach(hour => {
+                hour.feelslike = celsiusToFahrenheit(hour.feelslike);
+                hour.windspeed = kmhToMph(hour.windspeed);
+            });
+
+            // Convert weekly forecast
+            weatherData.weeklyForecast.forEach(day => {
+                day.tempmin = celsiusToFahrenheit(day.tempmin);
+                day.tempmax = celsiusToFahrenheit(day.tempmax);
+                day.windspeed = kmhToMph(day.windspeed);
+            });
+
+            // Switch to imperial
+            weatherData.unitSystem = "imperial";
+            break;
+
+        default:
+            throw new Error("Unknown unit system");
+    }
+
+    return weatherData;
+}
+
+
+function fahrenheitToCelsius(f) {
+    return (((f - 32) * 5) / 9).toFixed(1);
+}
+
+function celsiusToFahrenheit(c) {
+    return ((c * 9 / 5) + 32).toFixed(1);
+}
+
+function mphToKmh(mph) {
+    return (mph * 1.60934).toFixed(1);
+}
+
+function kmhToMph(kmh) {
+    return (kmh / 1.60934).toFixed(1);
+}
