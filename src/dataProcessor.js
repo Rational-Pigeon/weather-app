@@ -14,6 +14,7 @@ async function processWeatherData(response) {
     let unitSystem = "imperial";
 
     const currentWeather = {
+        day: getDayName(response.days[0].datetime),
         conditions: response.currentConditions.conditions,
         datetime: response.currentConditions.datetime,
         feelslike: response.currentConditions.feelslike,
@@ -64,7 +65,7 @@ export async function getFormattedData(location) {
     return processWeatherData(await getWeatherData(urlComposer(location)));
 };
 
-export async function flipUnits(weatherData) {
+export function flipUnits(weatherData) {
 
     switch (weatherData.unitSystem) {
         case "imperial":
