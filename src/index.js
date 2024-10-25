@@ -56,3 +56,9 @@ unitToggle.addEventListener("change", () => {
     removeChildren();
     renderWeatherData(weatherData);
 });
+
+searchInput.addEventListener("keypress", (event) => {
+    if (event.key === "Enter") {
+        searchBtn.click();
+    }
+});
