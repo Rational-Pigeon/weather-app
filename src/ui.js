@@ -11,6 +11,7 @@ export function removeChildren(element = container) {
 export function renderWeatherData(weatherData) {
     renderCurrentWeather(weatherData);
     renderHourlyWeather(weatherData);
+    renderWeeklyForecast(weatherData);
 }
 
 function renderCurrentWeather(weatherData) {
@@ -93,6 +94,43 @@ function renderHourlyWeather(weatherData) {
     container.appendChild(hourlyGrid);
 }
 
-function renderWeeklyForecast() { }
+function renderWeeklyForecast(weatherData) {
+    const weeklyGrid = document.createElement("div");
+    weeklyGrid.classList.add("grid", "grid-cols-5", "gap-0", "w-3/5", "mb-8");
+
+    const title = document.createElement("h2");
+    title.classList.add("text-4xl", "font-bold", "text-gray-600");
+    title.innerText = "Weekly Forecast"
+
+    weatherData.weeklyForecast.forEach((day, index) => {
+        const icon = require(`./img/${day.icon}.svg`);
+
+        const bgColorClass = index % 2 === 0 ? "bg-slate-300" : "bg-slate-400";
+
+        weeklyGrid.innerHTML += `
+        <div class="flex flex-col items-center justify-center ${bgColorClass} p-2 rounded-l-xl">
+            <p>${day.day}</p>
+        </div>
+        <div class="flex justify-center items-center ${bgColorClass} p-2">
+            <img class="w-16 h-16" src="${icon}" alt="${day.icon} icon">
+        </div>
+        <div class="flex flex-col items-center justify-center ${bgColorClass} p-2">
+            <img class="w-6 h-6" src="${humidityIcon}" alt="humidity icon">
+            <p>${day.humidity}%</p>
+        </div>
+        <div class="flex flex-col items-center justify-center ${bgColorClass} p-2">
+            <img class="w-6 h-6" src="${windSpeedIcon}" alt="wind speed icon">
+            <p>${day.windspeed}<span class="windspeed">km/h</span></p>
+        </div>
+        <div class="flex justify-center items-center ${bgColorClass} p-2 space-x-1 rounded-r-xl">
+            <p>${day.tempmin}<sup class="temp">°C</sup></p>
+            <p>/</p>
+            <p>${day.tempmax}<sup class="temp">°C</sup></p>
+        </div>
+        `;
+    });
+    container.appendChild(title);
+    container.appendChild(weeklyGrid)
+}
 
 export function loadingScreen() { }
