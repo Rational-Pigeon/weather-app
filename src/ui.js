@@ -15,6 +15,7 @@ export function renderWeatherData(weatherData) {
 }
 
 function renderCurrentWeather(weatherData) {
+    const unitSystem = weatherData.unitSystem;
     const currentWeatherContainer = document.createElement("div"); currentWeatherContainer.classList.add("grid", "grid-cols-2",
         "grid-rows-[3fr_1fr_3fr]", "place-items-center", "w-2/5", "justify-center", "rounded-lg", "bg-slate-300", "p-4");
 
@@ -27,9 +28,10 @@ function renderCurrentWeather(weatherData) {
 
     const minAndMax = `
     <div class="flex text-2xl items-center gap-1">
-        <p class="text-sky-700 font-bold">${weatherData.currentWeather.tempmin}<sup class="temp">°C</sup></p>
+        <p class="text-sky-700 font-bold">${weatherData.currentWeather.tempmin}
+            <sup class="temp text-gray-800">${unitSystem === "imperial" ? "°F" : "°C"}</sup></p>
         <p class="text-3xl text-gray-600">/</p>
-        <p class=" text-rose-600 font-bold">${weatherData.currentWeather.tempmax}<sup class="temp">°C</sup></p>
+        <p class=" text-rose-600 font-bold">${weatherData.currentWeather.tempmax}<sup class="temp text-gray-800">${unitSystem === "imperial" ? "°F" : "°C"}</sup></p>
     </div>`
 
     const iconPath = require(`./img/${weatherData.currentWeather.icon}.svg`);
@@ -38,7 +40,7 @@ function renderCurrentWeather(weatherData) {
         <div class="flex items-center text-4xl font-bold text-gray-600 gap-2">
             <img src="${iconPath}" alt="${weatherData.currentWeather.icon} icon" class="w-28 h-28">
             <div class="flex flex-col items-center">
-                <p>${weatherData.currentWeather.feelslike} <sup class="temp">°C</sup> </p>
+                <p>${weatherData.currentWeather.feelslike} <sup class="temp">${unitSystem === "imperial" ? "°F" : "°C"}</sup> </p>
                 <p class="text-gray-800 text-xl font-semibold">${weatherData.currentWeather.conditions}</p>
             </div>
         </div>
@@ -54,7 +56,8 @@ function renderCurrentWeather(weatherData) {
         </div>
         <div class="flex flex-col items-center">
             <img class="w-8 h-8" src="${windSpeedIcon}" alt="wind-speed icon">
-            <p>${weatherData.currentWeather.windspeed}<span class="velocity">km/h</span></p>
+            <p>${weatherData.currentWeather.windspeed}<span class="velocity">
+                ${unitSystem === "imperial" ? "mph" : "km/h"}</span></p>
         </div>
     </div>`
     currentWeatherContainer.innerHTML = city + dayAndTime + minAndMax + iconAndTemp + windAndHumidity;
@@ -62,6 +65,7 @@ function renderCurrentWeather(weatherData) {
 }
 
 function renderHourlyWeather(weatherData) {
+    const unitSystem = weatherData.unitSystem;
     const hourlyGrid = document.createElement("div");
     const title = document.createElement("h2");
     title.classList.add("text-4xl", "font-bold", "text-gray-600");
@@ -77,7 +81,7 @@ function renderHourlyWeather(weatherData) {
         <div class="min-w-[150px] flex flex-col rounded-xl bg-slate-300 justify-center items-center gap-2 p-2">
             <p>${forecast.datetime}</p>
             <img class="w-16 h-16" src="${icon}" alt="${forecast.icon} icon">
-            <p class="font-bold">${forecast.feelslike}<sup class="temp">°C</sup></p>
+            <p class="font-bold">${forecast.feelslike}<sup class="temp">${unitSystem === "imperial" ? "°F" : "°C"}</sup></p>
             <div class="flex gap-4">
                 <div class="flex flex-col justify-center items-center">
                     <img class="w-6 h-6" src="${humidityIcon}" alt="humidity icon">
@@ -85,7 +89,7 @@ function renderHourlyWeather(weatherData) {
                 </div>
                 <div class="flex flex-col justify-center items-center">
                     <img class="w-6 h-6" src="${windSpeedIcon}" alt="humidity icon">
-                    <p>${Math.round(forecast.windspeed)}<span class="velocity">km/h</span></p>
+                    <p>${Math.round(forecast.windspeed)}<span class="velocity">${unitSystem === "imperial" ? "mph" : "km/h"}</span></p>
                 </div>
             </div>
         </div>`
@@ -95,6 +99,7 @@ function renderHourlyWeather(weatherData) {
 }
 
 function renderWeeklyForecast(weatherData) {
+    const unitSystem = weatherData.unitSystem;
     const weeklyGrid = document.createElement("div");
     weeklyGrid.classList.add("grid", "grid-cols-5", "gap-0", "w-3/5", "mb-8");
 
@@ -109,7 +114,7 @@ function renderWeeklyForecast(weatherData) {
 
         weeklyGrid.innerHTML += `
         <div class="flex flex-col items-center justify-center ${bgColorClass} p-2 rounded-l-xl">
-            <p>${day.day}</p>
+            <p class="text-bold text-lg">${day.day}</p>
         </div>
         <div class="flex justify-center items-center ${bgColorClass} p-2">
             <img class="w-16 h-16" src="${icon}" alt="${day.icon} icon">
@@ -123,9 +128,9 @@ function renderWeeklyForecast(weatherData) {
             <p>${day.windspeed}<span class="windspeed">km/h</span></p>
         </div>
         <div class="flex justify-center items-center ${bgColorClass} p-2 space-x-1 rounded-r-xl">
-            <p>${day.tempmin}<sup class="temp">°C</sup></p>
-            <p>/</p>
-            <p>${day.tempmax}<sup class="temp">°C</sup></p>
+            <p class="text-sky-700">${day.tempmin}<sup class="temp text-gray-800">${unitSystem === "imperial" ? "°F" : "°C"}</sup></p>
+            <p class="text-lg">/</p>
+            <p class="text-rose-600">${day.tempmax}<sup class="temp text-gray-800">${unitSystem === "imperial" ? "°F" : "°C"}</sup></p>
         </div>
         `;
     });

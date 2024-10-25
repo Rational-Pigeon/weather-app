@@ -32,12 +32,12 @@ locationBtn.addEventListener("click", async () => {
 unitToggle.addEventListener('change', function() {
     if (this.checked) {
         unitLabel.textContent = "°C,km/h";
-        // Call flipUnits function to switch to metric
-        weatherData = flipUnits(weatherData); // Assumes you have access to weatherData
+        weatherData = flipUnits(weatherData);
     } else {
         unitLabel.textContent = "°F,mph";
-        // Call flipUnits function to switch back to imperial
-        weatherData = flipUnits(weatherData); // Assumes you have access to weatherData
+        weatherData = flipUnits(weatherData);
     }
     console.log(weatherData);
+    removeChildren();
+    renderWeatherData(weatherData);
 });
