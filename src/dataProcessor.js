@@ -8,8 +8,11 @@ function getDayName(dateString) {
 }
 
 async function processWeatherData(response) {
+    if (!response || response.error || !response.days || !response.currentConditions) {
+        return { error: "Could not retrieve weather data. Please check the city name and try again." };
+    }
+
     const city = await getCityName(response.resolvedAddress);
-    console.log(city);
 
     let unitSystem = "imperial";
 
@@ -32,7 +35,7 @@ async function processWeatherData(response) {
     const hoursToday = response.days[0].hours.filter(hour => hour.datetimeEpoch > currentHourEpoch);
 
     // If fewer than 23 hours left in the current day, include hours from the next day
-    const hoursTomorrow = response.days[1].hours.slice(0, 23 - hoursToday.length);
+    const hoursTomorrow = response.days[1]?.hours.slice(0, 23 - hoursToday.length) || [];
     const hourlyConditions = [...hoursToday, ...hoursTomorrow].map(hour => ({
         feelslike: hour.feelslike,
         datetime: hour.datetime,

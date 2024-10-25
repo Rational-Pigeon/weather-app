@@ -6,10 +6,10 @@
     <title>Weather Forecast</title>
 </head>
 
-<body class="flex flex-col flex-nowrap text-gray-800 bg-slate-200 gap-4">
+<body class="flex flex-col flex-nowrap text-gray-800 bg-slate-200 gap-4 m-0 p-0">
     <!-- searchbox and buttons container -->
-    <div class="mt-4 flex w-full items-center justify-center gap-4">
-        <input type="search" id="search-input" class="rounded-lg border-2 border-gray-800" />
+    <div class="p-4 flex w-full items-center justify-center gap-4 bg-slate-400">
+        <input type="search" id="search-input" class="rounded-lg border-2 border-gray-800 py-1 px-2" autofocus />
         <button id="search-btn" class="rounded-full border border-gray-800 bg-gray-100 p-2">
             <img class="h-6 w-6" src="./img/search.svg" alt="search icon" />
         </button>
@@ -22,11 +22,12 @@
                 <input type="checkbox" id="unitToggle" checked />
                 <span class="slider round"></span>
             </label>
-            <p id="unitLabel">°C,km/h</p>
+            <p id="unitLabel">°F,mph</p>
         </div>
     </div>
+    <div id="alert-box" class="hidden p-4 text-white bg-red-500 rounded-lg mx-auto my-2 w-3/4 text-center"></div>
 
-    <div id="body-container" class="flex justify-center items-center"></div>
+    <div id="body-container" class="flex flex-col justify-center items-center gap-8"></div>
     <!-- current weather containers -->
 </body>
 
