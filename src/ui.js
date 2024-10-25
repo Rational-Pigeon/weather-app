@@ -10,6 +10,7 @@ export function removeChildren(element = container) {
 
 export function renderWeatherData(weatherData) {
     renderCurrentWeather(weatherData);
+    renderHourlyWeather(weatherData);
 }
 
 function renderCurrentWeather(weatherData) {
@@ -59,7 +60,38 @@ function renderCurrentWeather(weatherData) {
     container.appendChild(currentWeatherContainer);
 }
 
-function renderHourlyWeather() { }
+function renderHourlyWeather(weatherData) {
+    const hourlyGrid = document.createElement("div");
+    const title = document.createElement("h2");
+    title.classList.add("text-4xl", "font-bold", "text-gray-600");
+    title.innerText = "Hourly Forecast"
+
+    hourlyGrid.classList.add("grid", "grid-flow-col", "gap-4", "overflow-x-scroll",
+        "w-3/5", "bg-slate-400", "p-4", "rounded-xl");
+
+    for (let forecast of weatherData.hourlyConditions) {
+        const icon = require(`./img/${forecast.icon}.svg`);
+
+        hourlyGrid.innerHTML += `
+        <div class="min-w-[150px] flex flex-col rounded-xl bg-slate-300 justify-center items-center gap-2 p-2">
+            <p>${forecast.datetime}</p>
+            <img class="w-16 h-16" src="${icon}" alt="${forecast.icon} icon">
+            <p class="font-bold">${forecast.feelslike}<sup class="temp">°C</sup></p>
+            <div class="flex gap-4">
+                <div class="flex flex-col justify-center items-center">
+                    <img class="w-6 h-6" src="${humidityIcon}" alt="humidity icon">
+                    <p>${Math.round(forecast.humidity)}%</p>
+                </div>
+                <div class="flex flex-col justify-center items-center">
+                    <img class="w-6 h-6" src="${windSpeedIcon}" alt="humidity icon">
+                    <p>${Math.round(forecast.windspeed)}<span class="velocity">km/h</span></p>
+                </div>
+            </div>
+        </div>`
+    }
+    container.appendChild(title);
+    container.appendChild(hourlyGrid);
+}
 
 function renderWeeklyForecast() { }
 
