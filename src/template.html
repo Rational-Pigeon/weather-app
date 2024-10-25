@@ -1,12 +1,33 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title></title>
+    <meta charset="UTF-8" />
+    <title>Weather Forecast</title>
 </head>
 
-<body>
+<body class="flex flex-col flex-nowrap text-gray-800 bg-slate-200 gap-4">
+    <!-- searchbox and buttons container -->
+    <div class="mt-4 flex w-full items-center justify-center gap-4">
+        <input type="search" id="search-input" class="rounded-lg border-2 border-gray-800" />
+        <button id="search-btn" class="rounded-full border border-gray-800 bg-gray-100 p-2">
+            <img class="h-6 w-6" src="./img/search.svg" alt="search icon" />
+        </button>
+        <button id="location-btn" class="rounded-full border border-gray-800 bg-gray-100 p-2">
+            <img class="h-6 w-6" src="./img/location.svg" alt="location icon" />
+        </button>
+
+        <div class="flex w-32 items-center justify-between">
+            <label class="switch">
+                <input type="checkbox" id="unitToggle" checked />
+                <span class="slider round"></span>
+            </label>
+            <p id="unitLabel">°C,km/h</p>
+        </div>
+    </div>
+
+    <div id="body-container" class="flex justify-center items-center"></div>
+    <!-- current weather containers -->
 </body>
 
 </html>

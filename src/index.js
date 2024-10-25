@@ -1,21 +1,43 @@
 import "./styles.css";
-import { getWeatherData, getUserLocation, getCityName } from "./fetch";
-import { processWeatherData } from "./dataProcessor";
+import { getFormattedData, flipUnits } from "./dataProcessor";
+import { renderWeatherData, removeChildren } from "./ui";
 
-const API_KEY = "XEZVKR2YRZPQUXCE6LN2PQAZM";
-let url;
-let city;
-const { latitude, longitude } = await getUserLocation();
+const searchBtn = document.getElementById("search-btn");
+const locationBtn = document.getElementById("location-btn");
+const searchInput = document.getElementById("search-input");
+export let weatherData = await flipUnits(await getFormattedData());
+let location;
+const unitToggle = document.getElementById('unitToggle');
+const unitLabel = document.getElementById('unitLabel');
 
-// formatting default fetch url on first time running the app.
-if (latitude && longitude) {
-    url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${latitude},${longitude}?key=${API_KEY}`;
-}
-else {
-    url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/london?key=${API_KEY}`
-}
+console.log(weatherData);
+renderWeatherData(weatherData);
 
-city = await getCityName(latitude, longitude);
-let weatherData = await getWeatherData(url);
 
-console.log(processWeatherData(weatherData));
+
+searchBtn.addEventListener("click", async () => {
+    location = searchInput.value;
+    weatherData = await flipUnits(await getFormattedData(location));
+    console.log(weatherData);
+    removeChildren();
+    renderWeatherData(weatherData);
+});
+
+locationBtn.addEventListener("click", async () => {
+    weatherData = await flipUnits(await getFormattedData());
+    removeChildren();
+    renderWeatherData(weatherData);
+});
+
+unitToggle.addEventListener('change', function() {
+    if (this.checked) {
+        unitLabel.textContent = "°C,km/h";
+        // Call flipUnits function to switch to metric
+        weatherData = flipUnits(weatherData); // Assumes you have access to weatherData
+    } else {
+        unitLabel.textContent = "°F,mph";
+        // Call flipUnits function to switch back to imperial
+        weatherData = flipUnits(weatherData); // Assumes you have access to weatherData
+    }
+    console.log(weatherData);
+});
