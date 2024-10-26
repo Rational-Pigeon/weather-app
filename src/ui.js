@@ -1,6 +1,7 @@
 const humidityIcon = require("./img/humidity.svg");
 const windSpeedIcon = require("./img/wind-speed.svg");
 const container = document.querySelector("#body-container")
+const loadingContainer = document.getElementById("loading-screen");
 
 export function removeChildren(element = container) {
     while (element.firstChild) {
@@ -138,4 +139,10 @@ function renderWeeklyForecast(weatherData) {
     container.appendChild(weeklyGrid)
 }
 
-export function loadingScreen() { }
+export function loadingScreen(show = true) {
+    if (show) {
+        loadingContainer.classList.remove("hidden");
+    } else {
+        loadingContainer.classList.add("hidden");
+    }
+}

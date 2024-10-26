@@ -1,6 +1,6 @@
 import "./styles.css";
 import { getFormattedData, flipUnits } from "./dataProcessor";
-import { renderWeatherData, removeChildren } from "./ui";
+import { renderWeatherData, removeChildren, loadingScreen } from "./ui";
 
 const searchBtn = document.getElementById("search-btn");
 const locationBtn = document.getElementById("location-btn");
@@ -9,11 +9,7 @@ const unitToggle = document.getElementById("unitToggle");
 const unitLabel = document.getElementById("unitLabel");
 
 let isMetric = false;
-let weatherData = await getFormattedData();
-if (isMetric) {
-    weatherData = flipUnits(weatherData);
-}
-renderWeatherData(weatherData);
+let weatherData;
 
 function showAlert(message) {
     const alertBox = document.getElementById("alert-box");
@@ -22,39 +18,45 @@ function showAlert(message) {
     setTimeout(() => alertBox.classList.add("hidden"), 5000);
 }
 
-searchBtn.addEventListener("click", async () => {
-    const location = searchInput.value;
-    weatherData = await getFormattedData(location);
-    if (weatherData.error) {
-        showAlert(weatherData.error);
-    } else {
-        if (isMetric) {
-            weatherData = flipUnits(weatherData);
+async function fetchAndRenderWeather(location = null) {
+    try {
+        loadingScreen(true);  // Show loading screen
+        weatherData = await getFormattedData(location);
+        if (weatherData.error) {
+            showAlert(weatherData.error);
+        } else {
+            if (isMetric) {
+                weatherData = flipUnits(weatherData);
+            }
+            removeChildren();
+            renderWeatherData(weatherData);
         }
-        removeChildren();
-        renderWeatherData(weatherData);
+    } catch (error) {
+        showAlert("An error occurred while fetching weather data.");
+    } finally {
+        loadingScreen(false); // Hide loading screen
     }
+}
+
+// Initial data fetch
+fetchAndRenderWeather();
+
+searchBtn.addEventListener("click", async () => {
+    fetchAndRenderWeather(searchInput.value);
 });
 
 locationBtn.addEventListener("click", async () => {
-    weatherData = await getFormattedData();
-    if (weatherData.error) {
-        showAlert(weatherData.error);
-    } else {
-        if (isMetric) {
-            weatherData = flipUnits(weatherData);
-        }
-        removeChildren();
-        renderWeatherData(weatherData);
-    }
+    fetchAndRenderWeather();
 });
 
 unitToggle.addEventListener("change", () => {
     isMetric = !isMetric;
     unitLabel.textContent = isMetric ? "°C,km/h" : "°F,mph";
-    weatherData = flipUnits(weatherData);
-    removeChildren();
-    renderWeatherData(weatherData);
+    if (weatherData) {
+        weatherData = flipUnits(weatherData);
+        removeChildren();
+        renderWeatherData(weatherData);
+    }
 });
 
 searchInput.addEventListener("keypress", (event) => {
@@ -62,3 +64,4 @@ searchInput.addEventListener("keypress", (event) => {
         searchBtn.click();
     }
 });
+
